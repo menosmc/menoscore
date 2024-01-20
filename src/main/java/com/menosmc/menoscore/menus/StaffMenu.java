@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 import xyz.janboerman.guilib.api.ItemBuilder;
 import xyz.janboerman.guilib.api.menu.ItemButton;
@@ -20,13 +21,14 @@ import java.util.List;
 public class StaffMenu extends MenuHolder<MenosCore> {
 
     private final Player menuViewer;
+    private final Inventory lastInventory;
     private final HashMap<String, List<User>> staffMembers = MenosCore.getLuckPermsManager().getStaffMembers();
-    private final int page;
+    private int page = 1;
 
-    public StaffMenu(Player player, int page) {
+    public StaffMenu(Player player, Inventory lastInventory) {
         super(MenosCore.getInstance(), 54, "Staff Overview");
         this.menuViewer = player;
-        this.page = page;
+        this.lastInventory = lastInventory;
     }
 
     @Override
@@ -38,10 +40,50 @@ public class StaffMenu extends MenuHolder<MenosCore> {
         HashMap<User, String> shownUsers = manageShownUsers();
 
         int currentSlot = 9;
-        int maxSlot = 46;
+        int maxSlot = 44;
         for (User user : shownUsers.keySet()) {
+            if(currentSlot >= maxSlot) break;
+
             setButton(currentSlot, getStaffButton(user, shownUsers.get(user)));
+            currentSlot++;
         }
+
+        if (page > 1) {
+            setButton(47, new ItemButton<StaffMenu>(new ItemBuilder(Material.ARROW)
+                    .name("Previous Page")
+                    .build()) {
+                @Override
+                public void onClick(StaffMenu holder, InventoryClickEvent event) {
+                    page--;
+                    reload();
+                }
+            });
+        }
+
+        if (page > 1) {
+            setButton(51, new ItemButton<StaffMenu>(new ItemBuilder(Material.ARROW)
+                    .name("Next Page")
+                    .build()) {
+                @Override
+                public void onClick(StaffMenu holder, InventoryClickEvent event) {
+                    page++;
+                    reload();
+                }
+            });
+        }
+
+
+        setButton(49, new ItemButton<StaffMenu>(new ItemBuilder(Material.BARRIER)
+                .name(lastInventory == null ? "Exit" : "Previous Menu")
+                .build()) {
+            @Override
+            public void onClick(StaffMenu holder, InventoryClickEvent event) {
+                event.getWhoClicked().closeInventory();
+                menuViewer.openInventory(lastInventory);
+            }
+        });
+
+        fillEmptySlots();
     }
 
     private ItemButton<StaffMenu> getStaffButton(User shownUser, String staffRole) {
@@ -78,5 +120,13 @@ public class StaffMenu extends MenuHolder<MenosCore> {
         }
 
         return shownUsers;
+    }
+
+    private void fillEmptySlots() {
+        for (int slot = 0; slot < getInventory().getSize(); slot++) {
+            if (getInventory().getItem(slot) == null) {
+                setButton(slot, new ItemButton<>(new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).name(" ").build()));
+            }
+        }
     }
 }
