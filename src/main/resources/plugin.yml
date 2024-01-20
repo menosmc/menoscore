@@ -1,0 +1,7 @@
+name: Menoscore
+version: '${project.version}'
+main: com.menosmc.menoscore.Menoscore
+api-version: 1.20
+authors: [ frikandelworst ]
+description: The core plugin of MenosMC.
+website: menosmc.com
