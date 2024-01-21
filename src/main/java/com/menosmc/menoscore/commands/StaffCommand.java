@@ -9,7 +9,7 @@ import com.menosmc.menoscore.menus.StaffMenu;
 import org.bukkit.entity.Player;
 
 @CommandAlias("staff|staffgui")
-@CommandPermission("menoscore.commands.staffgui")
+@CommandPermission("menosCore.commands.staffgui")
 public class StaffCommand extends BaseCommand {
 
     @Default

@@ -83,6 +83,7 @@ public class StaffMenu extends MenuHolder<MenosCore> {
             }
         });
 
+        fillButtonBar();
         fillEmptySlots();
     }
 
@@ -120,6 +121,20 @@ public class StaffMenu extends MenuHolder<MenosCore> {
         }
 
         return shownUsers;
+    }
+
+    private void fillButtonBar() {
+        for (int slot = 0; slot <= 8; slot++) {
+            if (getInventory().getItem(slot) == null) {
+                setButton(slot, new ItemButton<>(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).name(" ").build()));
+            }
+        }
+
+        for (int slot = 45; slot <= 53; slot++) {
+            if (getInventory().getItem(slot) == null) {
+                setButton(slot, new ItemButton<>(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).name(" ").build()));
+            }
+        }
     }
 
     private void fillEmptySlots() {

@@ -31,11 +31,15 @@ public final class MenosCore extends JavaPlugin {
     }
 
     private void registerListeners() {
+        Bukkit.getLogger().info("Registering Listeners...");
         Bukkit.getPluginManager().registerEvents(GuiListener.getInstance(), getInstance());
+        Bukkit.getLogger().info("Finished Registering Listeners.");
     }
 
     private void registerCommands() {
+        Bukkit.getLogger().info("Registering Commands...");
         PaperCommandManager commandManager = new PaperCommandManager(getInstance());
         commandManager.registerCommand(new StaffCommand());
+        Bukkit.getLogger().info("Finished registering commands.");
     }
 }
