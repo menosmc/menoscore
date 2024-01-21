@@ -19,7 +19,8 @@ public class LuckPermsManager {
 
     @Getter
     private final HashMap<String, List<User>> staffMembers = new HashMap<>();
-    private final String[] staffRoles = new String[]{
+    @Getter
+    private static final String[] staffRoles = new String[]{
             "owner",
             "manager",
             "developer",

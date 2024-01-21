@@ -1,5 +1,6 @@
 package com.menosmc.menoscore.menus;
 
+import com.menosmc.menoscore.LuckPermsManager;
 import com.menosmc.menoscore.MenosCore;
 import com.menosmc.menoscore.framework.ChatHelper;
 import net.luckperms.api.model.user.User;
@@ -14,6 +15,7 @@ import xyz.janboerman.guilib.api.ItemBuilder;
 import xyz.janboerman.guilib.api.menu.ItemButton;
 import xyz.janboerman.guilib.api.menu.MenuHolder;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -105,23 +107,28 @@ public class StaffMenu extends MenuHolder<MenosCore> {
         int currentIndex = (page - 1) * 36;
         int skippingIndex = 0;
 
-        for (String staffRole : staffMembers.keySet()) {
-            for (User user : staffMembers.get(staffRole)) {
-                if (skippingIndex < currentIndex) {
+        List<String> sortedRoles = Arrays.asList(LuckPermsManager.getStaffRoles());
+
+        for (String staffRole : sortedRoles) {
+            if (staffMembers.containsKey(staffRole)) {
+                for (User user : staffMembers.get(staffRole)) {
+                    if (skippingIndex < currentIndex) {
+                        skippingIndex++;
+                        continue;
+                    }
+
+                    shownUsers.put(user, staffRole);
+                    currentIndex++;
                     skippingIndex++;
-                    continue;
+
+                    if (currentIndex == 44) break;
                 }
-
-                shownUsers.put(user, staffRole);
-                currentIndex++;
-                skippingIndex++;
-
-                if (currentIndex == 44) break;
             }
         }
 
         return shownUsers;
     }
+
 
     private void fillButtonBar() {
         for (int slot = 0; slot <= 8; slot++) {
